@@ -8,7 +8,7 @@ class TicketService {
     const exists = existingTickets.find(ticket => ticket.code === code);
     
     return {
-      id: existingTickets.length + 1,
+      id: Date.now(), // Cambiamos el ID para que sea único
       code: code,
       date: formatDate(now),
       time: formatTime(now),
@@ -18,14 +18,16 @@ class TicketService {
   }
 
   registerTicket(code, currentTickets) {
-    // Asegurarse de que currentTickets sea un array
-    const tickets = Array.isArray(currentTickets) ? currentTickets : [];
-    console.log('Registrando ticket, tickets actuales:', tickets);
+    // Obtener los tickets actuales del almacenamiento
+    const existingTickets = this.loadTickets();
+    console.log('Tickets existentes:', existingTickets);
 
-    const newTicket = this.createTicket(code, tickets);
-    const updatedTickets = [newTicket, ...tickets];
+    const newTicket = this.createTicket(code, existingTickets);
+    // Agregar el nuevo ticket al inicio del array
+    const updatedTickets = [newTicket, ...existingTickets];
     
     const success = storageService.saveTickets(updatedTickets);
+    console.log('Tickets después de guardar:', updatedTickets);
     
     return {
       success,
@@ -37,8 +39,7 @@ class TicketService {
 
   loadTickets() {
     const tickets = storageService.getTickets();
-    console.log('Cargando tickets:', tickets);
-    return tickets || [];
+    return Array.isArray(tickets) ? tickets : [];
   }
 
   clearAllTickets() {

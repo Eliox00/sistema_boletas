@@ -7,7 +7,7 @@ class StorageService {
     try {
       const ticketsString = JSON.stringify(tickets);
       localStorage.setItem(this.STORAGE_KEY, ticketsString);
-      console.log('Tickets guardados:', tickets);
+      console.log('Guardando tickets en localStorage:', tickets.length, 'tickets');
       return true;
     } catch (error) {
       console.error('Error al guardar tickets:', error);
@@ -18,22 +18,14 @@ class StorageService {
   getTickets() {
     try {
       const ticketsString = localStorage.getItem(this.STORAGE_KEY);
-      const tickets = ticketsString ? JSON.parse(ticketsString) : [];
-      console.log('Tickets recuperados:', tickets);
+      if (!ticketsString) return [];
+      
+      const tickets = JSON.parse(ticketsString);
+      console.log('Recuperando tickets de localStorage:', tickets.length, 'tickets');
       return tickets;
     } catch (error) {
-      console.error('Error al cargar tickets:', error);
+      console.error('Error al obtener tickets:', error);
       return [];
-    }
-  }
-
-  clearTickets() {
-    try {
-      localStorage.removeItem(this.STORAGE_KEY);
-      return true;
-    } catch (error) {
-      console.error('Error clearing tickets:', error);
-      return false;
     }
   }
 }
