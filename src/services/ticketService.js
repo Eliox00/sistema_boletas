@@ -18,12 +18,14 @@ class TicketService {
   }
 
   registerTicket(code, currentTickets) {
-    console.log('Tickets actuales:', currentTickets);
-    const newTicket = this.createTicket(code, currentTickets);
-    const updatedTickets = [newTicket, ...currentTickets];
+    // Asegurarse de que currentTickets sea un array
+    const tickets = Array.isArray(currentTickets) ? currentTickets : [];
+    console.log('Registrando ticket, tickets actuales:', tickets);
+
+    const newTicket = this.createTicket(code, tickets);
+    const updatedTickets = [newTicket, ...tickets];
     
     const success = storageService.saveTickets(updatedTickets);
-    console.log('Tickets actualizados:', updatedTickets);
     
     return {
       success,
@@ -34,7 +36,9 @@ class TicketService {
   }
 
   loadTickets() {
-    return storageService.getTickets();
+    const tickets = storageService.getTickets();
+    console.log('Cargando tickets:', tickets);
+    return tickets || [];
   }
 
   clearAllTickets() {

@@ -5,20 +5,24 @@ class StorageService {
 
   saveTickets(tickets) {
     try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tickets));
+      const ticketsString = JSON.stringify(tickets);
+      localStorage.setItem(this.STORAGE_KEY, ticketsString);
+      console.log('Tickets guardados:', tickets);
       return true;
     } catch (error) {
-      console.error('Error saving tickets:', error);
+      console.error('Error al guardar tickets:', error);
       return false;
     }
   }
 
   getTickets() {
     try {
-      const tickets = localStorage.getItem(this.STORAGE_KEY);
-      return tickets ? JSON.parse(tickets) : [];
+      const ticketsString = localStorage.getItem(this.STORAGE_KEY);
+      const tickets = ticketsString ? JSON.parse(ticketsString) : [];
+      console.log('Tickets recuperados:', tickets);
+      return tickets;
     } catch (error) {
-      console.error('Error loading tickets:', error);
+      console.error('Error al cargar tickets:', error);
       return [];
     }
   }

@@ -7,13 +7,23 @@ const TicketManager = () => {
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
-    // Cargar tickets al iniciar
-    const savedTickets = ticketService.loadTickets();
-    setTickets(savedTickets);
+    // Cargar tickets existentes al iniciar
+    loadExistingTickets();
   }, []);
 
+  const loadExistingTickets = () => {
+    const savedTickets = ticketService.loadTickets();
+    console.log('Tickets cargados:', savedTickets);
+    setTickets(savedTickets);
+  };
+
   const handleNewTicket = (code) => {
-    const result = ticketService.registerTicket(code, tickets);
+    // Obtener tickets actualizados antes de registrar uno nuevo
+    const currentTickets = ticketService.loadTickets();
+    
+    const result = ticketService.registerTicket(code, currentTickets);
+    console.log('Resultado del registro:', result);
+    
     if (result.success) {
       setTickets(result.tickets);
     }
