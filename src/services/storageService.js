@@ -1,32 +1,34 @@
-import { STORAGE_KEY } from '../constants';
-
 class StorageService {
-  getTickets() {
-    try {
-      const tickets = localStorage.getItem(STORAGE_KEY);
-      return tickets ? JSON.parse(tickets) : [];
-    } catch (error) {
-      console.error('Error al cargar tickets:', error);
-      return [];
-    }
+  constructor() {
+    this.STORAGE_KEY = 'tickets_data';
   }
 
   saveTickets(tickets) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tickets));
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tickets));
       return true;
     } catch (error) {
-      console.error('Error al guardar tickets:', error);
+      console.error('Error saving tickets:', error);
       return false;
+    }
+  }
+
+  getTickets() {
+    try {
+      const tickets = localStorage.getItem(this.STORAGE_KEY);
+      return tickets ? JSON.parse(tickets) : [];
+    } catch (error) {
+      console.error('Error loading tickets:', error);
+      return [];
     }
   }
 
   clearTickets() {
     try {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(this.STORAGE_KEY);
       return true;
     } catch (error) {
-      console.error('Error al limpiar tickets:', error);
+      console.error('Error clearing tickets:', error);
       return false;
     }
   }

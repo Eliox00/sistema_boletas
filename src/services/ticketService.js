@@ -18,10 +18,12 @@ class TicketService {
   }
 
   registerTicket(code, currentTickets) {
+    console.log('Tickets actuales:', currentTickets);
     const newTicket = this.createTicket(code, currentTickets);
     const updatedTickets = [newTicket, ...currentTickets];
     
     const success = storageService.saveTickets(updatedTickets);
+    console.log('Tickets actualizados:', updatedTickets);
     
     return {
       success,

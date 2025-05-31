@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ScannerService from '../services/scannerService';
 import { SCANNER_STATUS } from '../constants';
+import ticketService from '../services/ticketService';
 
 const Scanner = ({ onScanSuccess, onError }) => {
   const [isScanning, setIsScanning] = useState(false);
@@ -8,6 +9,7 @@ const Scanner = ({ onScanSuccess, onError }) => {
   const [manualCode, setManualCode] = useState('');
   const [scannerStatus, setScannerStatus] = useState(SCANNER_STATUS.READY);
   const [scannerStatusClass, setScannerStatusClass] = useState('scanner-ready');
+  const [tickets, setTickets] = useState([]);
   
   const videoRef = useRef(null);
   const scannerServiceRef = useRef(new ScannerService());
@@ -16,6 +18,12 @@ const Scanner = ({ onScanSuccess, onError }) => {
     return () => {
       scannerServiceRef.current.destroy();
     };
+  }, []);
+
+  useEffect(() => {
+    // Cargar tickets existentes al montar el componente
+    const savedTickets = ticketService.loadTickets();
+    setTickets(savedTickets);
   }, []);
 
   const handleStartScanner = async () => {
@@ -57,6 +65,15 @@ const Scanner = ({ onScanSuccess, onError }) => {
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleManualSubmit();
+    }
+  };
+
+  const handleScan = (code) => {
+    if (code) {
+      const result = ticketService.registerTicket(code, tickets);
+      if (result.success) {
+        setTickets(result.tickets);
+      }
     }
   };
 
