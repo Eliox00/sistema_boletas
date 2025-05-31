@@ -3,6 +3,17 @@ class StorageService {
     this.STORAGE_KEY = 'tickets_data';
   }
 
+  clearStorage() {
+    try {
+      localStorage.clear();
+      console.log('Storage cleared');
+      return true;
+    } catch (error) {
+      console.error('Error clearing storage:', error);
+      return false;
+    }
+  }
+
   saveTickets(tickets) {
     try {
       const ticketsString = JSON.stringify(tickets);
